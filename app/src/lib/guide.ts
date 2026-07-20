@@ -14,7 +14,7 @@
 // 与 evals/agent.ts 的 answerLLM 共享同一套 prompt 设计
 
 import { animals, getAnimalsByVenue, type AnimalCard, type Persona } from '@/data/animals'
-import { nodes, nodeMap, shortestMin } from '@/data/poi'
+import { nodeMap, shortestMin } from '@/data/poi'
 import { buildPlan, fmtClock, type PlanInput } from './planner'
 import type { GuideMessage } from './tourStore'
 

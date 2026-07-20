@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
             try {
               const chunks: Buffer[] = []
               for await (const chunk of req) chunks.push(chunk as Buffer)
-              const { image, prompt } = JSON.parse(Buffer.concat(chunks).toString('utf-8'))
+              const { image, prompt } = JSON.parse(Buffer.concat(chunks).toString('utf-8')) as { image: string; prompt: string }
 
               if (!env.LLM_API_KEY) {
                 res.statusCode = 500
@@ -55,7 +55,7 @@ export default defineConfig(({ mode }) => {
                   }],
                 }),
               })
-              const data = await r.json()
+              const data = await r.json() as { choices?: { message: { content?: string } }[]; model?: string; usage?: unknown }
               if (!r.ok) {
                 res.statusCode = 502
                 res.setHeader('Content-Type', 'application/json')
@@ -84,7 +84,7 @@ export default defineConfig(({ mode }) => {
             try {
               const chunks: Buffer[] = []
               for await (const chunk of req) chunks.push(chunk as Buffer)
-              const { messages } = JSON.parse(Buffer.concat(chunks).toString('utf-8'))
+              const { messages } = JSON.parse(Buffer.concat(chunks).toString('utf-8')) as { messages: Array<{ role: string; content: string }> }
 
               if (!env.LLM_API_KEY) {
                 res.statusCode = 500
@@ -103,7 +103,7 @@ export default defineConfig(({ mode }) => {
                 },
                 body: JSON.stringify({ model, temperature: 0, messages }),
               })
-              const data = await r.json()
+              const data = await r.json() as { choices?: { message: { content?: string } }[]; model?: string; usage?: unknown }
               if (!r.ok) {
                 res.statusCode = 502
                 res.setHeader('Content-Type', 'application/json')

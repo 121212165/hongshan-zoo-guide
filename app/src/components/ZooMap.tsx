@@ -5,7 +5,7 @@
 // - 自动 pan 到 currentId（useMap + flyTo）
 // - Leaflet 加载失败 → 降级到原 SVG 模式（保留 fallback）
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -113,8 +113,6 @@ function ZooMapInner(props: ZooMapProps): React.ReactElement {
         attributionControl={false}
         maxBounds={L.latLngBounds(ZOO_BOUNDS[0], ZOO_BOUNDS[1]).pad(0.5)}
         className="w-full h-full"
-        // 高德瓦片加载失败时切到 SVG
-        errorOverlayColor="#e9efe0"
       >
         <TileLayer
           url="https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}"

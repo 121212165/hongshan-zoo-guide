@@ -8,9 +8,16 @@ _reference/
 
 # app 子项目的忽略规则继承自 app/.gitignore
 
+# Vercel 本地链接信息
+.vercel/
+app/.vercel/
+
 # 旧的 node_modules 备份目录
 app/nm_old_*/
 app/nm_backup_*/
 
-# 视频生成临时文件
+# 视频生成产物
 video/tmp/
+video/audio/
+video/__pycache__/
+video/output.mp4
