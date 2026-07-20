@@ -1,0 +1,11 @@
+{
+  "text": "茉莉一天睡18–22小时，清醒也是慢动作营业（来源：饲养员日志）～  \n别喊她“起床”，她不是懒，是考拉式自在！  \n红山连场馆温湿度都按考拉标准调，不为游客“营业”妥协（来源：公开报道）。  \n想看她？上午称体重那会儿，全场自动触发“哇——”声控特效，稳准狠！",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1863,
+  "usage": {
+    "promptTokens": 436,
+    "completionTokens": 96,
+    "totalTokens": 532
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "text": "獐子是长江中下游的原住民，红山本土物种保育区的明星！（来源：红山公众号）  \n咱们本土区主打一个“认识邻居”——野猪、獐子、扬子鳄……都是你家楼下（生态意义上）的老乡。（来源：公开报道）  \n保护不用远赴非洲，从了解身边的生命开始～",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2007,
+  "usage": {
+    "promptTokens": 403,
+    "completionTokens": 78,
+    "totalTokens": 481
+  }
+}

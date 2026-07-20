@@ -1,0 +1,11 @@
+{
+  "text": "乐申可是红山的“猩”艺术家！会画画，红山还为它出过画册、办过画展（来源：公开报道）。但别误会——它不是在表演，画画是丰容活动，专为动脑解闷、自主选择（来源：红山公众号）。不动？不画？那才正常——自在才是真本事。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2102,
+  "usage": {
+    "promptTokens": 458,
+    "completionTokens": 79,
+    "totalTokens": 537
+  }
+}

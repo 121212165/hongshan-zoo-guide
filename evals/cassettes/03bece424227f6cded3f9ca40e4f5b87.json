@@ -1,0 +1,11 @@
+{
+  "text": "杜杜是白面僧面猴。  \n他和花花一起住在红山。  \n杜杜很害羞，不爱热闹。（来源：红山公众号）  \n他和花花是夫妻，感情很好。（来源：红山公众号）  \n他们有个女儿叫Lucas。（来源：饲养员日志）  \n杜杜最爱陪着花花和Lucas。  \n杜杜可以自己决定见不见你。  \n他不动时，是在舒服地休息。  \n我们不喂他，不摸他，不叫他。  \n他自在，就是最好的样子。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2149,
+  "usage": {
+    "promptTokens": 714,
+    "completionTokens": 119,
+    "totalTokens": 833
+  }
+}

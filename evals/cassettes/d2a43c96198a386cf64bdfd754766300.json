@@ -1,0 +1,11 @@
+{
+  "text": "是的！突突出生后被妈妈弃养，由饲养员人工育幼带大（来源：公开报道），如今已成功回归猴群，还当上猴妈啦～（来源：红山公众号）  \n人工育幼的终极目标从来不是让它依赖人，而是帮它重新做回一只猴——现在，它正活成最自在的川金丝猴本猴 🐒",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2224,
+  "usage": {
+    "promptTokens": 395,
+    "completionTokens": 87,
+    "totalTokens": 482
+  }
+}

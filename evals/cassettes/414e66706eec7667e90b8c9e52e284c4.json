@@ -1,0 +1,11 @@
+{
+  "text": "花花是白面僧面猴，杜杜的老婆，家里说一不二的大女主（来源：红山公众号）；饲养员从不插手它们的“家务事”，连杜杜被“家暴”都淡定围观——网友笑说“打是亲骂是爱”（来源：饲养员日志）。这可不是闹剧，而是红山尊重动物社会规则的真实日常。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1678,
+  "usage": {
+    "promptTokens": 512,
+    "completionTokens": 87,
+    "totalTokens": 599
+  }
+}

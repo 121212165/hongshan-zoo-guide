@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 43 38% 95%;
+    --foreground: 150 20% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 150 20% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 20% 12%;
+    --primary: 152 35% 28%;
+    --primary-foreground: 43 38% 96%;
+    --secondary: 88 22% 90%;
+    --secondary-foreground: 152 35% 22%;
+    --muted: 88 18% 91%;
+    --muted-foreground: 150 8% 42%;
+    --accent: 36 75% 55%;
+    --accent-foreground: 150 30% 12%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.625rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ============ Leaflet 地图 marker 样式（ZooMap.tsx 使用） ============ */
+.leaflet-container {
+  font-family: inherit;
+  background: #e9efe0;
+}
+
+.zoo-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.zoo-marker-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoo-marker-dot {
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease-out;
+}
+
+.zoo-marker-inner:hover .zoo-marker-dot {
+  transform: scale(1.2);
+}
+
+.zoo-marker-label {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px #fff, 0 0 4px #fff, 0 0 4px #fff;
+  pointer-events: none;
+}
+
+/* 当前节点的脉冲动画 */
+@keyframes zoo-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.6);
+    opacity: 0;
+  }
+}
+
+.zoo-pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border: 2px solid;
+  border-radius: 50%;
+  animation: zoo-pulse 1.8s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Leaflet Popup 中文字体调优 */
+.leaflet-popup-content {
+  margin: 8px 10px;
+  font-size: 13px;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}

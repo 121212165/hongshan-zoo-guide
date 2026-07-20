@@ -1,0 +1,11 @@
+{
+  "text": "獐子可是咱长江中下游的“原住民”！红山本土物种保育区的当红明星，和野猪、扬子鳄一起，组成了咱们身边的“邻居天团”（来源：红山公众号；公开报道）。  \n不靠 exotic（ exotic？不，是“有戏”！），保护就从认识家门口的生命开始～  \n所以它不是“进口货”，是地地道道的江南土著，连户口本都不用办的那种 😎",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2546,
+  "usage": {
+    "promptTokens": 378,
+    "completionTokens": 104,
+    "totalTokens": 482
+  }
+}

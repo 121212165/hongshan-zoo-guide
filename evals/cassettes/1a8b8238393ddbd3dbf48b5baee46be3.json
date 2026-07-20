@@ -1,0 +1,11 @@
+{
+  "text": "杜杜是咱红山的白面僧面猴顶流，因“长相炸裂”出圈，实则社恐本恐（来源：红山公众号）；和老婆花花2019年一起入住，妥妥妻管严；女儿Lucas出生后，成功晋升贴身保镖（来源：饲养员日志）。他从不营业，爱见不见——这恰恰说明福利好。（来源：红山公众号）",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2118,
+  "usage": {
+    "promptTokens": 559,
+    "completionTokens": 97,
+    "totalTokens": 656
+  }
+}

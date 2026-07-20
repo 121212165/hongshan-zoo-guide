@@ -1,0 +1,16 @@
+# 密钥文件（含真实 apiKey，严禁入库）
+*-apiKey-*.csv
+*.env
+.env
+
+# 克隆的开源参考项目（仅用于本地学习，不入库）
+_reference/
+
+# app 子项目的忽略规则继承自 app/.gitignore
+
+# 旧的 node_modules 备份目录
+app/nm_old_*/
+app/nm_backup_*/
+
+# 视频生成临时文件
+video/tmp/

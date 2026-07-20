@@ -1,0 +1,11 @@
+{
+  "text": "不是哦！乐申画画是红山给它安排的丰容活动——动脑解闷、自主选择，不是为游客表演（来源：红山公众号）。它出过画册、办过画展，但那都是它“自愿创作”的成果展示（来源：公开报道）。在红山，动物不动、不营业，恰恰说明它自在又舒服～",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1684,
+  "usage": {
+    "promptTokens": 462,
+    "completionTokens": 80,
+    "totalTokens": 542
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "text": "白面僧面猴杜杜，2019年出生，2021年入园，档案编号HS-2021-003，现居灵长区“南美雨林”展区。（出处：红山森林动物园灵长类档案卡）",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2176,
+  "usage": {
+    "promptTokens": 69,
+    "completionTokens": 60,
+    "totalTokens": 129
+  }
+}

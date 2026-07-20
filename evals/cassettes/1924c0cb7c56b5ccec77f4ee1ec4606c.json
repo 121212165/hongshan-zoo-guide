@@ -1,0 +1,11 @@
+{
+  "text": "花花地位高！杜杜是出了名的“妻管严”（来源：红山公众号），连灵长类展区的树杈都得让着花花先选。杜杜社恐又敏感，花花稳坐C位——连女儿Lucas出生后，杜杜才终于升职当贴身保镖（来源：饲养员日志）。这哪是夫妻，这是CEO和首席护花使者啊～",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1916,
+  "usage": {
+    "promptTokens": 468,
+    "completionTokens": 94,
+    "totalTokens": 562
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "text": "回啦！突突不仅回归猴群，还当上爸爸了～（来源：红山公众号）  \n它小时候被妈妈弃养，靠饲养员人工育幼长大；如今在猴群中自在生活，有了自己的小猴子——这才是人工育幼的终极目标：不是让它依赖人，而是帮它重新做回一只猴。（来源：公开报道）",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1699,
+  "usage": {
+    "promptTokens": 420,
+    "completionTokens": 79,
+    "totalTokens": 499
+  }
+}

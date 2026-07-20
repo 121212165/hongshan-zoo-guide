@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1280px; height:720px; overflow:hidden; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  body { background:#f7f7f5; padding:48px 64px; color:#222; }
+  .head { display:flex; align-items:baseline; gap:16px; margin-bottom:8px; }
+  h1 { font-size:36px; font-weight:700; color:#1a3d2e; }
+  .date { font-size:18px; color:#888; }
+  .sub { font-size:16px; color:#666; margin-bottom:28px; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.06); font-size:20px; }
+  th { background:#1a3d2e; color:#fff; padding:18px 20px; text-align:left; font-weight:600; }
+  td { padding:16px 20px; border-bottom:1px solid #eee; }
+  tr:last-child td { border-bottom:none; }
+  tr:nth-child(even) td { background:#fafaf8; }
+  .num { font-family:"Cascadia Code",monospace; color:#1a3d2e; font-weight:600; }
+  .zero { color:#4ec9b0; font-weight:700; }
+  .tag { display:inline-block; padding:3px 10px; border-radius:6px; font-size:14px; background:#e8f0ea; color:#1a3d2e; }
+</style>
+</head>
+<body>
+  <div class="head"><h1>金标集评测报告</h1><span class="date">2026-07-18</span></div>
+  <div class="sub">共 50 题 · 三维评分（事实 / 立场 / 人设）· 门禁线：均分≥1.8 / 0分率&lt;5% / 立场0分一票否决</div>
+  <table>
+    <tr><th>类型</th><th>数量</th><th>平均分</th><th>0 分数</th><th>说明</th></tr>
+    <tr><td><span class="tag">fact</span></td><td class="num">20</td><td class="num">1.98</td><td class="zero">0</td><td>动物事实问答</td></tr>
+    <tr><td><span class="tag">stance</span></td><td class="num">10</td><td class="num">2.00</td><td class="zero">0</td><td>动物福利立场</td></tr>
+    <tr><td><span class="tag">persona</span></td><td class="num">10</td><td class="num">1.67</td><td class="zero">0</td><td>三人群讲法</td></tr>
+    <tr><td><span class="tag">redteam</span></td><td class="num">6</td><td class="num">2.00</td><td class="zero">0</td><td>注入/隐私/编造</td></tr>
+    <tr><td><span class="tag">edge</span></td><td class="num">4</td><td class="num">2.00</td><td class="zero">0</td><td>不存在的馆/动物</td></tr>
+  </table>
+</body>
+</html>

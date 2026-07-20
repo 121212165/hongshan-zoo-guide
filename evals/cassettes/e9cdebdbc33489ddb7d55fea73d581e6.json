@@ -1,0 +1,11 @@
+{
+  "text": "乐申会画！红山为它出过画册、办过画展（来源：公开报道）。它画画不是表演，是丰容——动脑解闷、自己选颜料、自己下笔，自在得很（来源：红山公众号）。画，就是它表达“我今天心情不错”的方式。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1399,
+  "usage": {
+    "promptTokens": 508,
+    "completionTokens": 69,
+    "totalTokens": 577
+  }
+}

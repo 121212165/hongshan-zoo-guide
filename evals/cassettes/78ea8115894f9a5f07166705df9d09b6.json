@@ -1,0 +1,11 @@
+{
+  "text": "因为狼谷是按野外坡地设计的，狼群能自由奔跑、刨土、躲藏（来源：红山公众号）；更重要的是——它们根本不用“营业”，不被逼着露脸才是猛兽的体面（来源：公开报道）。看不见？不是偷懒，是福利到位，自在得很～",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1412,
+  "usage": {
+    "promptTokens": 400,
+    "completionTokens": 70,
+    "totalTokens": 470
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "text": "杜杜不打卡、不坐班，更不“下班”——它每天四点左右上树休息，那是它的自由时间（来源：红山公众号）。  \n动物没KPI，也不营业，上树=自在，不是怠工。  \n你看到它在树上发呆？恭喜，福利达标！（来源：饲养员日志）",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1752,
+  "usage": {
+    "promptTokens": 467,
+    "completionTokens": 76,
+    "totalTokens": 543
+  }
+}

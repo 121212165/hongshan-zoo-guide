@@ -1,0 +1,11 @@
+{
+  "text": "因为人家是「哨兵一家」！家族里永远有一只细尾獴自觉站高处放哨，轮班上岗，雷打不动（来源：饲养员日志）。不是摆pose，是真·职场人设——丁满的原型本型（来源：公开资料）！展区特留沙地，让它们能随时打洞、躲猫猫、摸鱼休息——打洞是刚需，不是卖萌～",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2407,
+  "usage": {
+    "promptTokens": 400,
+    "completionTokens": 93,
+    "totalTokens": 493
+  }
+}

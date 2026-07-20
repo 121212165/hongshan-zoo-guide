@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1280px; height:720px; overflow:hidden; }
+  body {
+    background:#1e1e1e;
+    font-family: "Cascadia Code", "Consolas", "Source Code Pro", monospace;
+    padding:36px 48px;
+    color:#e0e0e0;
+  }
+  .bar { display:flex; gap:8px; margin-bottom:20px; }
+  .dot { width:14px; height:14px; border-radius:50%; }
+  .dot.r { background:#ff5f57; } .dot.y { background:#febc2e; } .dot.g { background:#28c840; }
+  .title { color:#7ec699; font-size:20px; margin-bottom:24px; }
+  .cmd { color:#888; font-size:18px; margin-bottom:18px; }
+  .cmd .prompt { color:#569cd6; }
+  .out { font-size:18px; line-height:1.7; white-space:pre; }
+  .hi { color:#9cdcfe; font-weight:bold; }
+  .ok { color:#4ec9b0; font-weight:bold; }
+  .num { color:#dcdcaa; }
+  .sep { color:#888; }
+  .pass { color:#4ec9b0; font-size:22px; font-weight:bold; margin-top:18px; }
+</style>
+</head>
+<body>
+  <div class="bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+  <div class="title">Terminal — npm run eval</div>
+  <div class="cmd"><span class="prompt">&gt;</span> cd app &amp;&amp; npm run eval</div>
+  <div class="out"><span class="sep">═══ 金标集评测 ═══</span>
+共 50 题 / 类型=全量 / Agent=<span class="hi">stub</span> / Judge=规则化(离线)
+平均分：<span class="num">1.93</span>（门禁 ≥ 1.8）
+0 分率：<span class="num">0.0%</span>（门禁 &lt; 5%）
+立场 0 分：<span class="num">0</span>（一票否决）
+引用覆盖率：<span class="num">100%</span>
+
+分类：
+  fact     数量=20  均分=<span class="num">1.98</span>  0分=0
+  stance   数量=10  均分=<span class="num">2.00</span>  0分=0
+  persona  数量=10  均分=<span class="num">1.67</span>  0分=0
+  redteam  数量=6   均分=<span class="num">2.00</span>  0分=0
+  edge     数量=4   均分=<span class="num">2.00</span>  0分=0</div>
+  <div class="pass">✅ 门禁通过</div>
+</body>
+</html>

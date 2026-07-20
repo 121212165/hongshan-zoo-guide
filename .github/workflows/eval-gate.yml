@@ -1,0 +1,102 @@
+name: eval-gate
+
+# 红山省力 Agent · CI 门禁流水线（手册 §1.5）
+# 三档：
+#   lint   —— 静态检查，PR 与 main 都跑
+#   subset —— PR 触发，stub 模式跑前 20 题子集，快速反馈
+#   full   —— main 合并触发，stub 模式跑全量 50 题，门禁阈值同 run_eval.ts
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'evals/**'
+      - '.github/workflows/eval-gate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'evals/**'
+      - '.github/workflows/eval-gate.yml'
+
+# 同一分支新提交取消旧运行，省 CI 额度
+concurrency:
+  group: eval-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── 第一档：静态检查 ──
+  lint:
+    name: Lint (eslint)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: app/pnpm-lock.yaml
+      - name: Install pnpm
+        run: npm install -g pnpm@10
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      - name: Run lint
+        run: npm run lint
+
+  # ── 第二档：PR 子集门禁（stub 模式，前 20 题，约 5s） ──
+  subset:
+    name: Eval Subset (PR gate)
+    needs: lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: app/pnpm-lock.yaml
+      - name: Install pnpm
+        run: npm install -g pnpm@10
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      - name: Run subset eval (stub · 20 题)
+        # 门禁同 run_eval.ts：均分≥1.8、0 分率<5%、立场 0 分一票否决；失败 process.exit(1) 拦截合入
+        run: npm run eval:subset
+
+  # ── 第三档：main 合并触发全量门禁（stub 模式，50 题） ──
+  full:
+    name: Eval Full (main gate)
+    needs: lint
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: app/pnpm-lock.yaml
+      - name: Install pnpm
+        run: npm install -g pnpm@10
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      - name: Run full eval (stub · 50 题)
+        # 门禁同 run_eval.ts：均分≥1.8、0 分率<5%、立场 0 分一票否决；失败 process.exit(1) 拦截合入
+        run: npm run eval
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report-${{ github.run_id }}
+          path: evals/reports/
+          retention-days: 30

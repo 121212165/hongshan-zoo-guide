@@ -1,0 +1,11 @@
+{
+  "text": "杜杜是只小猴子。  \n它长得特别有趣。（来源：红山公众号）  \n它很爱花花。  \n花花是它的老婆。（来源：红山公众号）  \n它有点害羞。  \n它喜欢和花花在一起。（来源：红山公众号）  \n它们有个女儿，叫Lucas。  \n杜杜会保护Lucas。（来源：饲养员日志）  \n杜杜可以自己决定见不见你。  \n它不动时，是在休息。  \n它不营业时，是过得很好。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2259,
+  "usage": {
+    "promptTokens": 818,
+    "completionTokens": 110,
+    "totalTokens": 928
+  }
+}

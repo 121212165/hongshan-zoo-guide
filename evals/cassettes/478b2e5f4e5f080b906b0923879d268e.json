@@ -1,0 +1,11 @@
+{
+  "text": "老马是1989年来到红山的（来源：公开报道），在国内动物园里算顶配“元老级”马来熊了。它在红山安度晚年，2022年底离世时，熊馆饲养员手写讣告刷屏全网（来源：红山讣告）——动物园的温柔，就是陪一个生命好好走到最后。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2068,
+  "usage": {
+    "promptTokens": 451,
+    "completionTokens": 83,
+    "totalTokens": 534
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "text": "杏仁是一只水豚。  \n水豚是世界上最大的啮齿动物。  \n（来源：红山公众号）  \n杏仁很安静，喜欢发呆。  \n发呆是它的正当职业。  \n（来源：红山公众号）  \n它和谁都能处得好。  \n小鸟站在背上，它也不躲。  \n（来源：游客观察）  \n它有水池、泥浴和躲藏的地方。  \n它不动，不是懒，是自在。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1873,
+  "usage": {
+    "promptTokens": 705,
+    "completionTokens": 98,
+    "totalTokens": 803
+  }
+}

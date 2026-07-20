@@ -1,0 +1,11 @@
+{
+  "text": "海滩上，一只戴着彩色背带的黄色拉布拉多犬正在与一名女子击掌。",
+  "model": "qwen-vl-plus",
+  "fromCache": false,
+  "elapsedMs": 775,
+  "usage": {
+    "promptTokens": 1267,
+    "completionTokens": 22,
+    "totalTokens": 1289
+  }
+}

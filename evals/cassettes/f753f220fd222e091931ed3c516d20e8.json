@@ -1,0 +1,11 @@
+{
+  "text": "不是哦～乐申画画是红山给它的丰容活动，为的是让它动脑解闷、自主选择、过得自在（来源：红山公众号）。它出过画册、办过画展，但那都是丰容成果的分享，不是为游客表演——动物没有表演义务，更不靠这个“营业”。（来源：公开报道）",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2580,
+  "usage": {
+    "promptTokens": 516,
+    "completionTokens": 78,
+    "totalTokens": 594
+  }
+}

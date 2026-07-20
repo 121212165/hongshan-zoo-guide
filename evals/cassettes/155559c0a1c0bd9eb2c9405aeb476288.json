@@ -1,0 +1,11 @@
+{
+  "text": "茉莉是只考拉。  \n考拉每天睡很久。（来源：饲养员日志）  \n茉莉上午要称体重。游客都会“哇”一声。（来源：公开报道）  \n她的家很舒服。温度湿度刚刚好。  \n茉莉不动时，是在自在休息。  \n考拉不表演。不拍照。不被叫醒。  \n茉莉是红山的朋友。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1730,
+  "usage": {
+    "promptTokens": 776,
+    "completionTokens": 84,
+    "totalTokens": 860
+  }
+}

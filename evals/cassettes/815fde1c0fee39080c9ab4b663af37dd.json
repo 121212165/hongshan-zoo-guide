@@ -1,0 +1,11 @@
+{
+  "text": "《狮子王》里的丁满！（来源：公开资料）  \n不过现实中的细尾獴可不演喜剧——它们家族24小时轮岗“哨兵”，站高处放哨是正经事（来源：饲养员日志）。沙地打洞不是为了可爱，是刚需！别看它们偶尔发呆，那叫自在，不是懒～",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2036,
+  "usage": {
+    "promptTokens": 400,
+    "completionTokens": 79,
+    "totalTokens": 479
+  }
+}

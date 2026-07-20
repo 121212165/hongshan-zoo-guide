@@ -1,0 +1,11 @@
+{
+  "text": "老马是马来熊。  \n它在红山生活了很久。（来源：公开报道）  \n它是国内最长寿的马来熊之一。（来源：公开报道）  \n红山陪它慢慢变老。（来源：红山公告）  \n红山的哥哥姐姐们都很爱它。（来源：红山公告）  \n老马的故事，是关于陪伴的温暖。（来源：红山公告）",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1602,
+  "usage": {
+    "promptTokens": 689,
+    "completionTokens": 83,
+    "totalTokens": 772
+  }
+}

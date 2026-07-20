@@ -1,0 +1,11 @@
+{
+  "text": "獐子是长江中下游的原住民，更是咱们南京本土的“老邻居”！红山森林动物园在本土物种保育区给它安排了C位，和野猪、扬子鳄一起讲身边的生命故事（来源：红山公众号、公开报道）。保护，真不用远赴非洲——低头看看南京的湿地与山林，獐子就在这儿自在生活着。",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 1832,
+  "usage": {
+    "promptTokens": 427,
+    "completionTokens": 86,
+    "totalTokens": 513
+  }
+}

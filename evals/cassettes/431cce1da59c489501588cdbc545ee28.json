@@ -1,0 +1,11 @@
+{
+  "text": "杏仁是水豚！（来源：红山公众号）  \n不是“卡皮巴拉”cosplay选手，本尊就是水豚本人～情绪稳如老狗，发呆是主业，社交是副业——鸟站背上都不带皱眉的（来源：游客观察）。  \n红山给它配齐水池、泥浴、躲猫猫区，自在才是它的KPI。  \n（温馨提示：不投喂、不打扰、不合影，静静看它当班——水豚的班，叫“精神图腾岗”。）",
+  "model": "qwen-plus",
+  "fromCache": false,
+  "elapsedMs": 2532,
+  "usage": {
+    "promptTokens": 500,
+    "completionTokens": 118,
+    "totalTokens": 618
+  }
+}
