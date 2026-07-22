@@ -72,6 +72,25 @@ export default defineConfig(({ mode }) => {
             }
           })
 
+          // POST /api/asr { audio? } → { text, mode }
+          // 说明：本地 dev server 不内置 ASR。浏览器端使用 Web Speech API 作为降级方案（语音转文字后走 /api/chat）。
+          // 如果需要服务端 ASR，请部署到支持语音识别的云服务（如阿里云 DashScope paraformer-realtime-v2）并替换此处。
+          server.middlewares.use('/api/asr', async (req, res) => {
+            if (req.method !== 'POST') {
+              res.statusCode = 405
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: 'Method Not Allowed' }))
+              return
+            }
+            res.statusCode = 501
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({
+              error: 'asr_not_implemented',
+              message: '本地 dev server 未内置服务端 ASR。浏览器端请使用 Web Speech API（webkitSpeechRecognition / SpeechRecognition）转写后调用 /api/chat。',
+              fallback: 'browser_web_speech_api',
+            }))
+          })
+
           // POST /api/chat { messages } → { text, model }
           // 供前端调用 LLM（如基于 ASR 转写结果生成回答）
           server.middlewares.use('/api/chat', async (req, res) => {

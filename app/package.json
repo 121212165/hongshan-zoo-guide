@@ -1,12 +1,13 @@
 {
-  "name": "my-app",
+  "name": "hongshan-tour-friend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint src/",
+    "typecheck": "tsc -b --noEmit",
     "preview": "vite preview",
     "eval": "tsx --tsconfig ../evals/tsconfig.json ../evals/run_eval.ts",
     "eval:subset": "tsx --tsconfig ../evals/tsconfig.json ../evals/run_eval.ts --subset 20",

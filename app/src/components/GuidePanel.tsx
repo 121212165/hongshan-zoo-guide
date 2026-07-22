@@ -1,21 +1,12 @@
-// 导游浮动按钮 + 底部抽屉（任务3）
-// 「红山朋友」全程陪伴：
-//   - 浮动按钮（右下角）：显示当前节点 / 进度
-//   - 点击展开底部抽屉：消息列表 + 输入框 + 快捷问
-//   - 智能：currentId 变化时自动调 generateArriveMessage 推讲解
-//   - 关键节点自动推 + 用户主动问（混合模式）
+// 导游浮动按钮 + 底部抽屉（任务3 + 阶段1闭环 + 阶段2多模态统一）
+// 阶段2：手动提问也统一走 tourStore.askQuestion，与拍/说/到三入口共享同一消息流
 
 import { useEffect, useRef, useState } from 'react'
 import { ChevronUp, X, Send, MessageCircle, MapPin } from 'lucide-react'
 import { useTourStore } from '@/lib/tourStore'
-import { generateArriveMessage, generateAskAnswer, type ArriveContext } from '@/lib/guide'
+import { generateArriveMessage, type ArriveContext } from '@/lib/guide'
 import { nodeMap } from '@/data/poi'
-import type { Persona } from '@/data/animals'
 import { fmtClock } from '@/lib/planner'
-
-interface Props {
-  persona: Persona
-}
 
 const QUICK_QUESTIONS = [
   '它在干嘛？',
@@ -24,20 +15,20 @@ const QUICK_QUESTIONS = [
   '下一段路怎么走？',
 ]
 
-export default function GuidePanel({ persona }: Props) {
+export default function GuidePanel() {
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const lastPushedIdRef = useRef<string | null>(null)
 
-  // 从 store 取状态和 actions（全部 inline selector，返回稳定引用）
   const status = useTourStore((s) => s.status)
   const plan = useTourStore((s) => s.plan)
   const currentId = useTourStore((s) => s.currentId)
   const visitedIds = useTourStore((s) => s.visitedIds)
   const guideMessages = useTourStore((s) => s.guideMessages)
   const guideMessagesLen = useTourStore((s) => s.guideMessages.length)
+  const persona = useTourStore((s) => s.persona)
   const stopsCount = useTourStore((s) => s.plan?.stops.length ?? 0)
   const endMin = useTourStore((s) => s.plan?.endMin ?? 0)
   const firstStopName = useTourStore((s) => s.plan?.stops[0]?.nodeId ?? null)
@@ -48,28 +39,25 @@ export default function GuidePanel({ persona }: Props) {
     if (idx < 0 || idx >= stops.length - 1) return null
     return stops[idx + 1].nodeId
   })
-  // actions（函数引用稳定）
   const pushGuideMessage = useTourStore((s) => s.pushGuideMessage)
   const startTour = useTourStore((s) => s.startTour)
   const arriveAt = useTourStore((s) => s.arriveAt)
   const completeTour = useTourStore((s) => s.completeTour)
+  const askQuestion = useTourStore((s) => s.askQuestion)
 
   const currentNode = currentId ? nodeMap[currentId] : null
   const isTouring = status === 'touring'
   const isCompleted = status === 'completed'
   const isGenerated = status === 'generated'
 
-  // 上下文：给导游用的 persona + startHour + visitedCount
-  const startHour = plan?.stops[0] ? plan.stops[0].arriveMin / 60 : 9
   const visitedCount = visitedIds.length
 
-  // 自动推讲解：currentId 变化时触发
   useEffect(() => {
     if (!isTouring || !currentId) return
     if (lastPushedIdRef.current === currentId) return
     lastPushedIdRef.current = currentId
 
-    const ctx: ArriveContext = { persona, startHour, visitedCount }
+    const ctx: ArriveContext = { persona, planStops: plan?.stops ?? [], visitedIds, nodeName: nodeMap[currentId]?.name ?? '' }
     let cancelled = false
     setLoading(true)
     generateArriveMessage(currentId, ctx)
@@ -95,51 +83,43 @@ export default function GuidePanel({ persona }: Props) {
       })
 
     return () => { cancelled = true }
-  }, [currentId, isTouring, persona, startHour, visitedCount, pushGuideMessage])
+  }, [currentId, isTouring, persona, plan, visitedIds, pushGuideMessage])
 
-  // 自动滚动到最新消息
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }, [guideMessagesLen, loading])
 
-  // 处理用户提问
+  useEffect(() => {
+    if (isCompleted) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOpen(true)
+    }
+  }, [isCompleted])
+
   const handleAsk = async (question: string) => {
     const q = question.trim()
     if (!q || loading) return
-    setLoading(true)
     setInput('')
-    pushGuideMessage({ role: 'user', text: q, trigger: 'manual' })
-
+    setLoading(true)
     try {
-      const ctx2: ArriveContext & { currentNodeId?: string | null } = {
+      const ctx: ArriveContext & { currentNodeId?: string | null } = {
         persona,
-        startHour,
-        visitedCount,
+        planStops: plan?.stops ?? [],
+        visitedIds,
+        nodeName: currentNode?.name ?? '',
         currentNodeId: currentId,
       }
-      const { text, citations } = await generateAskAnswer(q, ctx2)
-      pushGuideMessage({ role: 'guide', text, trigger: 'manual' })
-      if (citations.length > 0) {
-        pushGuideMessage({ role: 'system', text: `📚 来源：${citations.join('、')}` })
-      }
-    } catch (err) {
-      pushGuideMessage({
-        role: 'guide',
-        text: `这个问题我没接住：${err instanceof Error ? err.message : String(err)}`,
-        trigger: 'manual',
-      })
+      await askQuestion(q, ctx, 'manual')
     } finally {
       setLoading(false)
     }
   }
 
-  // 节点切换：「到这了」按钮
   const handleArriveHere = (nodeId: string) => {
     arriveAt(nodeId)
     setOpen(true)
   }
 
-  // 浮动按钮：根据状态显示不同内容
   const floatLabel = isTouring && currentNode
     ? `📍 ${currentNode.name}`
     : isCompleted
@@ -152,7 +132,6 @@ export default function GuidePanel({ persona }: Props) {
 
   return (
     <>
-      {/* 浮动按钮（右下角，避开底部 nav） */}
       <button
         onClick={() => setOpen((v) => !v)}
         className="fixed right-4 bottom-20 z-30 flex items-center gap-2 bg-primary text-primary-foreground rounded-full pl-3 pr-4 py-2.5 shadow-lg shadow-primary/20 border border-primary-foreground/10 hover:scale-[1.02] transition-transform"
@@ -170,7 +149,6 @@ export default function GuidePanel({ persona }: Props) {
         )}
       </button>
 
-      {/* 底部抽屉 */}
       {open && (
         <div className="fixed inset-0 z-40 flex items-end justify-center" onClick={() => setOpen(false)}>
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
@@ -179,7 +157,6 @@ export default function GuidePanel({ persona }: Props) {
             style={{ maxHeight: '80vh', minHeight: '60vh' }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* 抽屉头 */}
             <div className="flex items-center justify-between p-4 border-b border-border/50">
               <div className="flex items-center gap-2">
                 <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-lg">
@@ -191,7 +168,7 @@ export default function GuidePanel({ persona }: Props) {
                     {isTouring && currentNode
                       ? `现在在 ${currentNode.name}`
                       : isCompleted
-                        ? '行程已完成'
+                        ? '行程已完成，去看手账吧'
                         : isGenerated
                           ? '路线已就绪'
                           : '随时问我'}
@@ -203,7 +180,6 @@ export default function GuidePanel({ persona }: Props) {
               </button>
             </div>
 
-            {/* 消息列表 */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/30">
               {guideMessagesLen === 0 && (
                 <div className="text-center text-sm text-muted-foreground py-8">
@@ -241,7 +217,6 @@ export default function GuidePanel({ persona }: Props) {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* 状态控制条 */}
             {isGenerated && plan && firstStopName && (
               <div className="px-4 py-2 border-t border-border/50 bg-background">
                 <button
@@ -255,7 +230,6 @@ export default function GuidePanel({ persona }: Props) {
 
             {isTouring && (
               <div className="px-4 py-2 border-t border-border/50 bg-background space-y-2">
-                {/* 当前进度 */}
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <MapPin className="w-3 h-3" />
                   <span>{visitedCount} / {stopsCount} 站</span>
@@ -264,7 +238,6 @@ export default function GuidePanel({ persona }: Props) {
                   </div>
                   {endMin > 0 && <span className="text-[10px]">{fmtClock(endMin)} 出园</span>}
                 </div>
-                {/* 到这了 / 下一站 / 完成 */}
                 {nextStopId && (
                   <button
                     onClick={() => handleArriveHere(nextStopId)}
@@ -285,7 +258,14 @@ export default function GuidePanel({ persona }: Props) {
               </div>
             )}
 
-            {/* 快捷问 */}
+            {isCompleted && (
+              <div className="px-4 py-3 border-t border-border/50 bg-green-50">
+                <div className="text-sm text-green-800 text-center">
+                  🎉 手账已自动生成，切到「手账」Tab 看看今天的足迹吧
+                </div>
+              </div>
+            )}
+
             {isTouring && (
               <div className="px-4 pt-2 flex gap-2 overflow-x-auto pb-1">
                 {QUICK_QUESTIONS.map((q) => (
@@ -300,7 +280,6 @@ export default function GuidePanel({ persona }: Props) {
               </div>
             )}
 
-            {/* 输入框 */}
             <form
               onSubmit={(e) => { e.preventDefault(); handleAsk(input) }}
               className="p-3 border-t border-border/50 flex gap-2 bg-background"
@@ -309,12 +288,13 @@ export default function GuidePanel({ persona }: Props) {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={isTouring ? '问红山朋友…' : isGenerated ? '点开始游览，我陪你走' : '随时问我'}
+                placeholder={isTouring ? '问红山朋友…' : isGenerated ? '点开始游览，我陪你走' : isCompleted ? '今天辛苦了' : '随时问我'}
                 className="flex-1 px-3 py-2 rounded-xl border border-border bg-white text-sm focus:outline-none focus:border-primary"
+                disabled={isCompleted}
               />
               <button
                 type="submit"
-                disabled={!input.trim() || loading}
+                disabled={!input.trim() || loading || isCompleted}
                 className="px-3 py-2 rounded-xl bg-primary text-primary-foreground disabled:opacity-40"
               >
                 <Send className="w-4 h-4" />
@@ -324,7 +304,6 @@ export default function GuidePanel({ persona }: Props) {
         </div>
       )}
 
-      {/* 折叠提示条（仅游览中显示，引导展开） */}
       {!open && isTouring && currentNode && (
         <button
           onClick={() => setOpen(true)}

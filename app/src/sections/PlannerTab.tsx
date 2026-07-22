@@ -1,6 +1,6 @@
-// 游前 · 行程编织器（任务2：入园时间选择器 + 任务4：游览状态机联动）
-import { useState } from 'react'
-import { buildPlan, adjustPlan, fmtClock, type Plan, type PlanInput } from '@/lib/planner'
+﻿// 游前 · 行程编织器（任务2：入园时间选择器 + 任务4：游览状态机联动 + 阶段1/3：动态重规划）
+import { useMemo, useState } from 'react'
+import { buildPlan, fmtClock, type Plan, type PlanInput } from '@/lib/planner'
 import { animals } from '@/data/animals'
 import { nodeMap } from '@/data/poi'
 import { getAnimalsByVenue } from '@/data/animals'
@@ -8,7 +8,7 @@ import ZooMap from '@/components/ZooMap'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
-import { CloudRain, Footprints, Sparkles, MapPin, ChevronRight, Clock, CheckCheck, RotateCcw, Flag } from 'lucide-react'
+import { CloudRain, Footprints, Sparkles, MapPin, ChevronRight, Clock, CheckCheck, RotateCcw, Flag, AlertTriangle } from 'lucide-react'
 import type { TourStatus } from '@/lib/tourStore'
 
 const interestOptions = [
@@ -22,7 +22,6 @@ const interestOptions = [
 
 const mustSeeOptions = animals.filter((a) => a.tags.includes('star') && !a.memorial)
 
-// 任务2：入园时间选项（8:00-15:00，30 分钟步进）
 const START_HOUR_OPTIONS: { value: number; label: string }[] = (() => {
   const opts: { value: number; label: string }[] = []
   for (let h = 8; h <= 15; h += 1) {
@@ -38,14 +37,14 @@ interface Props {
   onInput: (i: PlanInput) => void
   onPlan: (p: Plan) => void
   onGoExplore: (venueId: string) => void
-  // 任务4：状态机联动
   status: TourStatus
   currentId: string | null
   visitedIds: string[]
   onReset: () => void
+  onReplan?: (trigger: 'tired' | 'rain') => void
 }
 
-export default function PlannerTab({ plan, input, onInput, onPlan, onGoExplore, status, currentId, visitedIds, onReset }: Props) {
+export default function PlannerTab({ plan, input, onInput, onPlan, onGoExplore, status, currentId, visitedIds, onReset, onReplan }: Props) {
   const [adjusting, setAdjusting] = useState<'tired' | 'rain' | null>(null)
 
   const toggleInterest = (id: string) => {
@@ -62,9 +61,10 @@ export default function PlannerTab({ plan, input, onInput, onPlan, onGoExplore, 
     setAdjusting(null)
   }
   const adjust = (t: 'tired' | 'rain') => {
-    const p = adjustPlan(input, t)
-    onPlan(p)
-    setAdjusting(t)
+    if (onReplan && (status === 'touring' || status === 'generated')) {
+      onReplan(t)
+      setAdjusting(t)
+    }
   }
 
   const chip = (active: boolean) =>
@@ -77,6 +77,34 @@ export default function PlannerTab({ plan, input, onInput, onPlan, onGoExplore, 
   const isCompleted = status === 'completed'
   const isGenerated = status === 'generated'
   const isDraft = status === 'draft'
+  const currentNode = currentId ? nodeMap[currentId] : null
+
+  const smartReplan = useMemo(() => {
+    if (!plan || !isTouring || !currentId) return null
+
+    const currentIdx = plan.stops.findIndex((stop) => stop.nodeId === currentId)
+    const remainingStops = currentIdx >= 0 ? plan.stops.slice(currentIdx + 1) : []
+    const remainingWalk = remainingStops.reduce((sum, stop) => sum + stop.walkMin, 0)
+
+    if ((currentNode?.slope ?? 0) >= 2 || remainingWalk >= 45 || input.energy === 1) {
+      return {
+        trigger: 'tired' as const,
+        title: '后半程有点硬核，建议切省力版',
+        desc: `${currentNode?.name ?? '当前位置'}之后剩余步行约 ${remainingWalk} 分钟，重排后会更保守地绕开高坡和长距离路段。`,
+      }
+    }
+
+    if (!input.fearSun && (currentNode?.shade ?? 0) <= 1) {
+      return {
+        trigger: 'rain' as const,
+        title: '当前位置偏开阔，建议切避晒/避雨版',
+        desc: '重排后会优先树荫更好、暴露路段更短的节点与休息点。',
+      }
+    }
+
+    return null
+  }, [plan, isTouring, currentId, currentNode, input.energy, input.fearSun])
+
 
   // 节点状态判断
   const stopState = (nodeId: string): 'visited' | 'current' | 'upcoming' => {
@@ -209,15 +237,37 @@ export default function PlannerTab({ plan, input, onInput, onPlan, onGoExplore, 
       {/* ============ 路线展示（generated/touring/completed 都可见） ============ */}
       {plan && (
         <>
-          {/* 动态调整入口（仅 generated 时可用） */}
-          {isGenerated && (
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="flex-1 rounded-xl bg-white" onClick={() => adjust('tired')}>
-                <Footprints className="w-4 h-4 mr-1" /> 我累了
-              </Button>
-              <Button variant="outline" size="sm" className="flex-1 rounded-xl bg-white" onClick={() => adjust('rain')}>
-                <CloudRain className="w-4 h-4 mr-1" /> 下雨了
-              </Button>
+          {/* 动态调整入口（generated/touring 时可用） */}
+          {(isGenerated || isTouring) && (
+            <div className="space-y-2">
+              {isTouring && (
+                <div className="flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  游览中调整路线会从当前位置重新规划剩余行程
+                </div>
+              )}
+              {smartReplan && (
+                <div className="rounded-xl border border-primary/30 bg-primary/5 px-3 py-3">
+                  <div className="text-sm font-semibold text-primary">💡 {smartReplan.title}</div>
+                  <div className="mt-1 text-xs leading-relaxed text-muted-foreground">{smartReplan.desc}</div>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="mt-2 rounded-lg"
+                    onClick={() => adjust(smartReplan.trigger)}
+                  >
+                    一键优化后半程
+                  </Button>
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="flex-1 rounded-xl bg-white" onClick={() => adjust('tired')}>
+                  <Footprints className="w-4 h-4 mr-1" /> 我累了
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1 rounded-xl bg-white" onClick={() => adjust('rain')}>
+                  <CloudRain className="w-4 h-4 mr-1" /> 下雨了
+                </Button>
+              </div>
             </div>
           )}
 
@@ -320,3 +370,5 @@ export default function PlannerTab({ plan, input, onInput, onPlan, onGoExplore, 
     </div>
   )
 }
+
+

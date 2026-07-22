@@ -135,8 +135,11 @@ function routeIntent(q: string): Intent {
 
 export interface ArriveContext {
   persona: Persona
-  startHour: number
-  visitedCount: number
+  startHour?: number
+  visitedCount?: number
+  planStops?: Array<{ nodeId: string; kind: string; arriveMin: number }>
+  visitedIds?: string[]
+  nodeName?: string
 }
 
 export async function generateArriveMessage(
@@ -377,7 +380,113 @@ function planAnswer(input: string): { text: string; citations: string[] } {
   }
 }
 
-// ============ 8. 工具：构造 GuideMessage ============
+// ============ 8. 多模态统一入口：拍/说/到 三条链路收敛到同一导游消息流 ============
+//
+// 触发入口与链路：
+//   「到」arrive → arriveAt(nodeId) → generateArriveMessage → pushGuideMessage(trigger='arrive')
+//   「说」ask   → 用户输入/语音转写 → generateAskAnswer → pushGuideMessage(trigger='manual')
+//   「拍」vision → 拍照 → VL识别 → generateVisionAnswer → pushGuideMessage(trigger='vision')
+//
+// 所有入口最终都走 pushGuideMessage，进入同一个导游消息列表。
+
+const VL_RECOGNIZE_PROMPT = '请识别图片中的动物，按 JSON 格式返回：{"species":"物种中文名","name":"如果是红山动物园的明星动物请说出名字，否则留空","confidence":0到1的浮点数,"description":"一句话描述你看到的动物状态"}。只返回 JSON，不要其他文字。'
+
+export interface VisionResult {
+  species?: string
+  name?: string
+  confidence?: number
+  description?: string
+  raw: string
+}
+
+function parseVisionResult(text: string): VisionResult {
+  try {
+    const m = text.match(/\{[^}]+\}/s)
+    if (m) {
+      const obj = JSON.parse(m[0])
+      return {
+        species: obj.species,
+        name: obj.name || undefined,
+        confidence: typeof obj.confidence === 'number' ? obj.confidence : undefined,
+        description: obj.description,
+        raw: text,
+      }
+    }
+  } catch {
+    // JSON parse fail, return raw
+  }
+  return { raw: text }
+}
+
+export async function recognizeFromPhoto(
+  imageDataUrl: string,
+  ctx: ArriveContext & { currentNodeId?: string | null }
+): Promise<{ userDisplay: string; guideText: string; citations: string[] }> {
+  let vlResp: { text: string }
+  try {
+    const resp = await fetch('/api/vision', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: imageDataUrl, prompt: VL_RECOGNIZE_PROMPT }),
+    })
+    const data = await resp.json()
+    if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`)
+    vlResp = data
+  } catch (err) {
+    console.warn('[guide] vision API failed:', err)
+    return {
+      userDisplay: '📷 拍照识别（离线模式）',
+      guideText: '拍照识别暂时不可用，你可以直接问我关于这只动物的问题，或者看看旁边的介绍牌。',
+      citations: [],
+    }
+  }
+
+  const result = parseVisionResult(vlResp.text)
+  const conf = result.confidence != null ? `${(result.confidence * 100).toFixed(0)}%` : ''
+  const speciesLabel = result.name || result.species || '某种动物'
+  const userDisplay = `📷 拍了一下：${speciesLabel}${conf ? `（置信度 ${conf}）` : ''}`
+
+  const matched = result.name
+    ? animals.find((a) => a.name === result.name)
+    : ctx.currentNodeId
+      ? getAnimalsByVenue(ctx.currentNodeId)[0]
+      : undefined
+
+  let guideText: string
+  if (matched) {
+    const style = ctx.persona === 'youth' ? '朋友口吻' : ctx.persona === 'kid' ? '给5岁孩子讲的口吻' : '长辈口吻'
+    const factsBlock = matched.facts.map((f) => `- ${f.text}（来源：${f.source}）`).join('\n')
+    try {
+      const resp = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'system',
+              content: `${STANCE_RULES}\n\n你看到了一张${matched.name}（${matched.species}）的照片，照片描述：${result.description || '正在活动'}。\n【档案卡】\n${factsBlock}\n【风格】${style}\n【任务】用100字以内，结合照片和档案卡，给出一段有趣的讲解。直接回答。`,
+            },
+            { role: 'user', content: '帮我看看这是什么？' },
+          ],
+        }),
+      })
+      const data = await resp.json()
+      if (resp.ok && data.text) {
+        guideText = data.text
+        return { userDisplay, guideText, citations: matched.facts.map((f) => f.source) }
+      }
+    } catch {
+      // fall through to template
+    }
+    guideText = `这是${matched.name}（${matched.species}）。${matched.say[ctx.persona]}`
+    return { userDisplay, guideText, citations: matched.facts.map((f) => f.source) }
+  }
+
+  guideText = `识别到可能是${speciesLabel}${result.description ? `，看起来${result.description}` : ''}。在红山坚持「无据不讲」，如果这是馆里的动物，可以看看介绍牌或直接问我。`
+  return { userDisplay, guideText, citations: [] }
+}
+
+// ============ 9. 工具：构造 GuideMessage ============
 
 export function makeGuideMessage(
   role: GuideMessage['role'],

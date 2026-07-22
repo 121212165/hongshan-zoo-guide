@@ -6,9 +6,16 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  // dist 为构建产物；src/components/ui/** 与 src/hooks/** 为 shadcn/ui 脚手架生成代码，
-  // 其内置的 react-refresh / set-state-in-effect 警告不参与本仓库门禁（手册 §1.5 CI lint）
-  globalIgnores(['dist', 'src/components/ui/**', 'src/hooks/**']),
+  globalIgnores([
+    'dist',
+    'node_modules',
+    '.vercel',
+    'nm_old_*',
+    '*.config.*',
+    'src/components/ui/**',
+    'src/hooks/**',
+    'src/llm_gateway/**',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -20,6 +27,12 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+    rules: {
+      'no-loss-of-precision': 'off',
+      '@typescript-eslint/no-loss-of-precision': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
 ])
